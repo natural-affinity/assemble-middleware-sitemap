@@ -26,6 +26,7 @@ module.exports  = function (params, callback) {
   options.robot = options.robot !== false;
   options.changefreq = options.changefreq || 'weekly';
   options.priority = (options.priority || 0.5).toString();
+  options.addhome = options.addhome || true;
   options.dest = options.dest || path.dirname(pages[0].dest);
 
 
@@ -53,6 +54,18 @@ module.exports  = function (params, callback) {
 
   var url = options.homepage;
   var relativedest = options.relativedest;
+
+  //Push homepage url if enabled
+  if (options.addhome === true) {
+    sitemap.push({
+      url: {
+        loc: url,
+        lastmod: (new Date()).toISOString(),
+        changefreq: options.changefreq,
+        priority: options.priority
+      }
+    });
+  }
 
   async.forEach(pages, function (file, next) {
 
