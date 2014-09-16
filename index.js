@@ -27,6 +27,7 @@ module.exports  = function (params, callback) {
   options.changefreq = options.changefreq || 'weekly';
   options.priority = (options.priority || 0.5).toString();
   options.addhome = options.addhome || true;
+  options.force_exclusion = options.force_exclusion || true;
   options.dest = options.dest || path.dirname(pages[0].dest);
 
 
@@ -67,11 +68,24 @@ module.exports  = function (params, callback) {
     });
   }
 
-  async.forEach(pages, function (file, next) {
+  //Build master exlusion list
+  if (!_.isUndefined(options.exclude)) {
+    exclusion = _.union([], exclusion, options.exclude || []);
+  }
 
-    if (!_.isUndefined(options.exclude)) {
-      exclusion = _.union([], exclusion, options.exclude || []);
-    }
+
+  var fex = _.filter(exclusion, function(e){ return e.indexOf('force:') !== -1; });
+
+  if (options.force_exclusion) {
+    async.forEach(fex, function (e, next) {
+       robots.push('Disallow: /' + e);
+
+      next();
+    }, callback());
+  }//Non-file exclusions should be added as-is if prefixed with 'force:'
+
+
+  async.forEach(pages, function (file, next) {
 
     var date = file.data.updated || file.data.date || new Date();
     var changefreq = file.data.changefreq || options.changefreq;
