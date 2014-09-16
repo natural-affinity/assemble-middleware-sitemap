@@ -78,7 +78,7 @@ module.exports  = function (params, callback) {
 
   if (options.force_exclusion) {
     async.forEach(fex, function (e, next) {
-       robots.push('Disallow: /' + e.replace('force:'));
+       robots.push('Disallow: /' + e.replace('force:',''));
 
       next();
     }, callback());
