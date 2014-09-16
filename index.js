@@ -27,6 +27,7 @@ module.exports  = function (params, callback) {
   options.changefreq = options.changefreq || 'weekly';
   options.priority = (options.priority || 0.5).toString();
   options.addhome = options.addhome || true;
+  options.omit_index = options.omit_index || true;
   options.force_exclusion = options.force_exclusion || true;
   options.dest = options.dest || path.dirname(pages[0].dest);
 
@@ -96,6 +97,10 @@ module.exports  = function (params, callback) {
       robots.push('Disallow: /' + getExternalFilePath(relativedest, file));
       return;
     }
+
+    if (options.omit_index || file.basename === 'index') {
+      return;
+    }//omit index.html from sitemap
 
     sitemap.push({
       url: {
