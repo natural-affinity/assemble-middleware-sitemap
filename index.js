@@ -109,7 +109,7 @@ module.exports  = function (params, callback) {
   write(sitemapDest, result);
 
   if (options.robot) {
-    var sitemapFile = {dest: url+"/"+sitemapDest};
+    var sitemapFile = {dest: url + "/sitemap.xml"};
     var robot = "User-agent: *\n";
 
     robot += robots.join('\n') + '\n\n';
